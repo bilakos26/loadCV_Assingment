@@ -1,0 +1,5 @@
+bs4
+pymongo
+pymongo[srv]
+python-dotenv
+random_user_agent
