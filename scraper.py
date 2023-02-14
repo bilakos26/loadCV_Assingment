@@ -19,7 +19,13 @@ try:
 except Exception:
     pass
 
+# creates a .log file
 logging.basicConfig(filename=FOLDER_PATH + '/scraper.log', filemode='a', format='\n%(asctime)s - %(levelname)s - %(message)s')
+
+logger=logging.getLogger() 
+
+# we set the threshold of logger to DEBUG 
+logger.setLevel(logging.DEBUG) 
 
 url = "https://www.simplyhired.com/job/-VtS8-Ed22iC3MtJzfmU9tIxOwJNOZKi370vt3E7iWycUt0dg4Hdnw?isp=0&q=software+engineer"
 
@@ -74,12 +80,13 @@ class Scraper:
                 if url not in self.load_file(): # checks if the link already exists inside the .json file
                     self.save_file(info) # save's the info to the file
                 else:
-                    print("\nInfo from this webpage has been scrapped before.\n")
+                    logger.info("INFO SCRAPED BEFORE")
+                    print("\nInfo from this webpage has been scraped before.\n")
             except ValidationError:
-                logging.error("VALIDATION ERROR", exc_info=True)
+                logger.error("VALIDATION ERROR", exc_info=True)
                 print("\nValidation error!\n")
         except Exception:
-            logging.error("RETRIEVE INFO ERROR", exc_info=True)
+            logger.error("RETRIEVE INFO ERROR", exc_info=True)
             print('\nRetrieve Info error!\n')
     
     # retrieve data from the website
@@ -88,7 +95,7 @@ class Scraper:
             response = requests.get(url, headers=self.userAgent()).text
             self.soup = bs(response, "html.parser")
         except Exception:
-            logging.error("GET RESPONSE ERROR", exc_info=True)
+            logger.error("GET RESPONSE ERROR", exc_info=True)
             print('\nGet response error!\n')
         
     # retrieve a random user agent
@@ -111,6 +118,7 @@ class Scraper:
             json.dump(json_f, ex_info, indent=3)
             ex_info.close()
         
+        logger.info("INFO SAVED")
         print("\nInfo saved!\n")
         
     # load json info
